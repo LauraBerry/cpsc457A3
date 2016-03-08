@@ -20,7 +20,7 @@
 
 map<string,RamFile> kernelFS;
 map<string,MyRamFile> myKernelFS;
-string* savedMemory;
+char* savedMemory;
 
 ssize_t FileAccess::pread(void *buf, size_t nbyte, off_t o) {
   if (o + nbyte > rf.size) nbyte = rf.size - o;
