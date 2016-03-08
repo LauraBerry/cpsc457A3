@@ -23,18 +23,21 @@
 
 #include <map>
 #include <string>
+#include <cstring>
 #include <cerrno>
 #include <unistd.h> // SEEK_SET, SEEK_CUR, SEEK_END
 
 class Access : public SynchronizedElement {
 public:
+/*A3*/
   virtual ~Access() {}
   virtual ssize_t pread(void *buf, size_t nbyte, off_t o) { return -EBADF; }
-  virtual ssize_t pwrite(const void *buf, size_t nbyte, off_t o) { return -EBADF; }
+  virtual ssize_t pwrite(off_t o, size_t nbyte, void *buf) { return -EBADF; }
   virtual ssize_t read(void *buf, size_t nbyte) { return -EBADF; }
   virtual ssize_t write(const void *buf, size_t nbyte) { return -EBADF; }
   virtual off_t lseek(off_t o, int whence) { return -EBADF; }
 };
+/*A3*/
 
 struct RamFile {
   vaddr vma;
@@ -43,18 +46,42 @@ struct RamFile {
   RamFile(vaddr v, paddr p, size_t s) : vma(v), pma(p), size(s) {}
 };
 
-extern map<string,RamFile> kernelFS;
+struct MyRamFile {
+  vaddr vma; //Laura: this needs to be changed to the virtual address
+  paddr pma;
+  size_t size;
+  MyRamFile(vaddr v, paddr p, size_t s) : vma(v), pma(p), size(s) {}
+};
+//Laura: this is storing the name of the file and the info on how to access it.
+
+extern map<string,RamFile> kernelFS; 
+//Laura gonna keep this and create my own copy. order: virtual memory acess, physical memory adress, size.
+//if you are doing a link list need the head in here to
+//if doing an index there needs to be an array in here.
+
+
+extern map<string,MyRamFile> myKernelFS;
+extern string* savedMemory;
+//initalize savedMemory here so that it is accessible where ever myKernelFS is accessable
 
 class FileAccess : public Access {
   SpinLock olock;
   off_t offset;
   const RamFile &rf;
 public:
+
+/*A3*/
   FileAccess(const RamFile& rf) : offset(0), rf(rf) {}
   virtual ssize_t pread(void *buf, size_t nbyte, off_t o);
+  virtual ssize_t pwrite(off_t o, size_t nbyte, void *buf);
   virtual ssize_t read(void *buf, size_t nbyte);
+  virtual ssize_t write( void *buf, size_t nbyte);
   virtual off_t lseek(off_t o, int whence);
 };
+/*A3*/
+//Laura: everytime i ask it to read n characters the offset is increased by n 
+//for a new instance the offset is 0.
+//this needs the ram file to go in. so if you have an inode it needs to get passed in here
 
 class KernelOutput;
 class OutputAccess : public Access {

@@ -15,24 +15,48 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 #include "world/Access.h"
-
 #include <cstring>
+#include <string>
 
 map<string,RamFile> kernelFS;
+map<string,MyRamFile> myKernelFS;
+string* savedMemory;
 
 ssize_t FileAccess::pread(void *buf, size_t nbyte, off_t o) {
   if (o + nbyte > rf.size) nbyte = rf.size - o;
-  memcpy( buf, (bufptr_t)(rf.vma + o), nbyte );
+  memcpy( buf, (bufptr_t)(rf.vma + o), nbyte );	//copy into buf from (bufptr_t)(rf.vma + o) for nbyte bytes.
   return nbyte;
 }
 
-ssize_t FileAccess::read(void *buf, size_t nbyte) {
+//Laura: i have the size, i check where it has to start and the number of bytes to see if it is to large
+	//if it is to large i normalize it as much as possible
+/*A3*/
+ssize_t FileAccess::pwrite(off_t o,  size_t nbyte,void *buf) {
+  if (o + nbyte > rf.size) nbyte = rf.size - o;
+  memcpy( buf, (bufptr_t)(rf.vma + o), nbyte );	//copy into buf from (bufptr_t)(rf.vma + o) for nbyte bytes.
+  return nbyte;
+}
+/*A3*/
+
+ssize_t FileAccess::read(void *buf, size_t nbyte) 
+{
   olock.acquire();
-  ssize_t len = pread(buf, nbyte, offset);
-  if (len >= 0) offset += len;
+  ssize_t len = pread(buf, nbyte, offset); 	//ask pread to read nbyte characters from location: offset and store it to location buf 
+  if (len >= 0) offset += len;				//increment the offset.
   olock.release();
   return len;
 }
+
+/*A3*/
+ssize_t FileAccess::write(void *buf, size_t nbyte) 
+{
+  olock.acquire();
+  ssize_t len = pwrite(offset, nbyte, buf); 	//ask pread to read nbyte characters from location: buf and store it to location offset 
+  if (len >= 0) offset += len;				//increment the offset.
+  olock.release();
+  return len;
+}
+/*A3*/
 
 off_t FileAccess::lseek(off_t o, int whence) {
   off_t new_o;

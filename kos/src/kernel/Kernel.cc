@@ -52,6 +52,41 @@ void kosMain() {
     }
     KOUT::outl();
   }
+/*A3*/
+  KOUT::out1("myKernelFS"); 		//fill myKernelFS the same way kernelFS was filled.
+  KOUT::outl();/*
+  auto iter3 = myKernelFS.find("motb");
+  if (iter3 == myKernelFS.end()) {
+    KOUT::outl("motb information not found");
+  } else {
+    FileAccess f(iter->second);
+    for (;;) {
+      char c;
+      if (f.read(&c, 1) == 0) break;
+      KOUT::out1(c);
+    }
+    KOUT::outl();
+   }
+*/
+	auto iter2 = kernelFS.find("filesystem_test");
+    if (iter2 == kernelFS.end()) 
+    {
+        KOUT::outl("filesystem_test information not found");
+    } 
+    else 
+    {
+        FileAccess f(iter2->second);
+        for (;;) 
+        {
+            char c;
+            if (f.read(&c, 1) == 0) break;
+			KOUT::out1(c);
+        }
+
+        KOUT::outl();
+    } 
+/*A3*/
+
 #if TESTING_TIMER_TEST
   StdErr.print(" timer test, 3 secs...");
   for (int i = 0; i < 3; i++) {

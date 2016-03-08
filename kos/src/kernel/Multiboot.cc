@@ -171,7 +171,23 @@ void Multiboot::readModules(vaddr disp) {
       multiboot_tag_module* tm = (multiboot_tag_module*)tag;
       string cmd = tm->cmdline;
       string name = cmd.substr(0, cmd.find_first_of(' '));
-      kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
+      kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );//(virtual, physical, size)
+	  /*A3*/
+	  /*
+	  copy to savedMemory here
+	  for (int i=0; i<5000; i++)
+	  {
+		size_t bytes= 10;	
+		 memcpy(savedMemory[i], tm->mod_start + disp, bytes);
+	  }
+	still don't know how many bytes it is though.
+	*/
+	  myKernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
+	 /*A3*/		
     }
   }
 }
+//Laura: goes through all the tags and if they are a text file they get the module and the name  of the file read, 
+//copy them from here and put them in your own place in memory and then insert them in your new structure. at first they will be contiguously stored, later it will move around.
+
+

@@ -372,13 +372,20 @@ apDone:
 
   DBG::outl(DBG::Boot, "Building kernel filesystem...");
   // initialize kernel file system with boot modules
-  Multiboot::readModules(kernelBase);
+  //need to alocate a big array to save space for the read files. 5000 slots==big
+  Multiboot::readModules(kernelBase); //Laura: go and see where they are stored and go and put them in a table so that they can be accessed.
 
   // more info from ACPI; could find IOAPIC interrupt pins for PCI devices
   initACPI2(); // needs "current thread"
 
   // initialize CDI drivers
+
   initCdiDrivers();
+ 	/*A3*/
+  	savedMemory= new string [5000];
+	//Laura: need to figure out how to copy into array.
+	/*A3*/
+
   DBG::outl(DBG::Boot, "CDI drivers initialized.");
 
   // probe for PCI devices
