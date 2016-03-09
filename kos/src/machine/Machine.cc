@@ -382,8 +382,7 @@ apDone:
 
   initCdiDrivers();
  	/*A3*/
-  	savedMemory= new string [5000];
-	//Laura: need to figure out how to copy into array.
+  	savedMemory= new char [5000];
 	/*A3*/
 
   DBG::outl(DBG::Boot, "CDI drivers initialized.");
