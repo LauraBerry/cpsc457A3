@@ -61,7 +61,7 @@ extern map<string,RamFile> kernelFS;
 
 
 extern map<string,MyRamFile> myKernelFS;
-extern char* savedMemory;
+extern string* savedMemory;
 //initalize savedMemory here so that it is accessible where ever myKernelFS is accessable
 
 class FileAccess : public Access {

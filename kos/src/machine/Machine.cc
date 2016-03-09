@@ -382,7 +382,7 @@ apDone:
 
   initCdiDrivers();
  	/*A3*/
-  	savedMemory= new char [5000];
+  	savedMemory= new string [5000];
 	//Laura: need to figure out how to copy into array.
 	/*A3*/
 

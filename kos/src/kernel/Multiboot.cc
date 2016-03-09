@@ -173,12 +173,15 @@ void Multiboot::readModules(vaddr disp) {
       string name = cmd.substr(0, cmd.find_first_of(' '));
       kernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );//(virtual, physical, size)
 	  /*A3*/
-	  // copy to savedMemory here
-		vaddr var=tm->mod_start+disp;
-		vaddr* pointer1= &var;
-		void* pointer=pointer1;	
-	 // memcpy(savedMemory, tm->mod_start + disp, (tm->mod_end - tm->mod_start));
-	  
+	  /*
+	  copy to savedMemory here
+	  for (int i=0; i<5000; i++)
+	  {
+		size_t bytes= 10;	
+		 memcpy(savedMemory[i], tm->mod_start + disp, bytes);
+	  }
+	still don't know how many bytes it is though.
+	*/
 	  myKernelFS.insert( {name, {tm->mod_start + disp, tm->mod_start, tm->mod_end - tm->mod_start}} );
 	 /*A3*/		
     }
